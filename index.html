@@ -1,0 +1,1308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Document · H/04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&family=JetBrains+Mono:wght@400..700&display=swap">
+<link rel="stylesheet" href="_shared/deck.css">
+<style>
+/* Workbench: HTML document anatomy. Orange-warm palette, sharp grid. */
+:root {
+  --bg: #eceff3;
+  --surface: #ffffff;
+  --surface-2: #dfe4ea;
+  --ink: #0a0e13;
+  --ink-2: #4a5563;
+  --ink-3: #8792a0;
+  --accent: #c84718;           /* HTML5 orange */
+  --accent-ink: #ffffff;
+  --accent-on-dark: #f07a4e;
+  --good: #137a43;
+  --bad: #c92a2a;
+  --warn: #b55c00;
+  --letterbox: #0a0e13;
+
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --card-r: 0px;
+  --tag-r: 0px;
+
+  --code-bg: #0d1520;
+  --code-fg: #dfe7f1;
+  --code-dim: #63758a;
+  --tok-keyword: #c79bf2;
+  --tok-string: #a6e3a1;
+  --tok-fn: #89b4fa;
+  --tok-tag: #f07a4e;
+  --tok-attr: #f9cc6c;
+  --tok-num: #fab387;
+  --tok-punct: #8a9bb0;
+  --tok-class: #f9cc6c;
+  --accent-code: #f07a4e;
+}
+
+.display, .h1, .h2, .h3 { font-stretch: 92%; font-variation-settings: "opsz" 96; }
+.display { font-weight: 740; letter-spacing: -.032em; }
+.h1 { font-weight: 700; letter-spacing: -.026em; }
+.h2 { letter-spacing: -.02em; }
+
+.slide.bench {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(10, 14, 19, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 14, 19, .045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: -1px -1px;
+}
+.slide[data-tone="dark"] {
+  --slide-bg: #0d1218;
+  --ink: #f2f5f8;
+  --ink-2: rgba(242, 245, 248, .72);
+  --ink-3: rgba(242, 245, 248, .5);
+  --surface: #141b24;
+  --surface-2: #1b2430;
+}
+.pn { font: 600 15px/1 var(--f-mono); letter-spacing: .14em; color: var(--ink-3); text-transform: uppercase; }
+.rule { height: 1px; background: color-mix(in srgb, var(--ink) 12%, transparent); }
+
+/* ---------- cover ---------- */
+.s-cover { justify-content: center; padding-right: 0; }
+.cover-copy { width: 860px; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 36px; }
+.cover-copy .display { font-size: clamp(130px, 11vw, 190px); line-height: .88; }
+.cover-meta { display: grid; grid-template-columns: repeat(2, max-content); gap: 22px 80px; margin: 10px 0 0; }
+.cover-meta div { display: flex; flex-direction: column; gap: 8px; }
+.cover-meta dt { font: 600 14px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.cover-meta dd { margin: 0; font-size: 26px; font-weight: 600; }
+.cover-art {
+  position: absolute; right: 0; top: 0; width: 760px; height: 1080px;
+  background: #0d1218;
+  display: flex; flex-direction: column; gap: 0;
+  font: 500 21px/1.7 var(--f-mono); color: #4d6175;
+  padding: 80px 40px;
+  overflow: hidden;
+}
+.cover-art span { color: #f07a4e; }
+.cover-art em { color: #f9cc6c; font-style: normal; }
+.cover-art s { color: #a6e3a1; text-decoration: none; }
+.cover-art b { color: #89b4fa; font-weight: 500; }
+
+/* ---------- route timeline ---------- */
+.route { position: relative; margin-top: 64px; }
+.route__track { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); position: relative; }
+.route__track::before { content: ""; position: absolute; left: 4.5%; right: 4.5%; top: 56px; height: 2px; background: color-mix(in srgb, var(--ink) 16%, transparent); }
+.stop { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; position: relative; padding: 0 6px; }
+.stop__t { font: 600 18px/1 var(--f-mono); color: var(--ink-3); letter-spacing: .04em; }
+.stop__dot { width: 22px; height: 22px; border-radius: 50%; background: var(--bg); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--ink) 30%, transparent); margin: 12px 0 4px; }
+.stop__l { font-size: 22px; font-weight: 650; line-height: 1.15; }
+.stop__d { font-size: 17px; line-height: 1.35; color: var(--ink-2); }
+.stop.is-key .stop__dot { background: var(--accent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent); }
+.stop.is-key .stop__l { color: var(--accent); }
+
+.method { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.method div { display: flex; flex-direction: column; gap: 12px; padding: 26px 28px; background: var(--surface); box-shadow: var(--shadow-1); }
+.method p { margin: 0; font-size: 24px; line-height: 1.4; color: var(--ink-2); }
+.method b { color: var(--ink); }
+
+/* ---------- Q&A ---------- */
+.qa-grid { display: grid; grid-template-columns: 740px minmax(0, 1fr); gap: 96px; align-items: center; flex: 1; }
+.qa-big { font-family: var(--f-display); font-size: 130px; line-height: .9; letter-spacing: -.03em; font-weight: 740; font-stretch: 92%; margin: 0; }
+.qa-list { display: flex; flex-direction: column; gap: 18px; }
+.qa-item { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 18px; background: var(--surface); box-shadow: var(--shadow-1); padding: 26px 30px; }
+.qa-item .pn { padding-top: 8px; }
+.qa-item h3 { font-size: 28px; line-height: 1.25; margin: 0; font-weight: 650; }
+.qa-item .reveal-box { grid-column: 2; min-height: 72px; }
+.qa-item .reveal-box p { font-size: 22px; line-height: 1.45; color: var(--ink-2); margin: 0; padding: 4px 0; }
+.qa-item .reveal-box__cover { justify-content: start; padding-left: 0; background: var(--surface); place-items: center start; color: var(--accent); }
+
+/* ---------- problem ---------- */
+.raw-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 36px; }
+.raw-box { display: flex; flex-direction: column; gap: 16px; }
+.raw-box .lbl { font: 700 13px/1 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; }
+.raw-box.is-bad .lbl { color: var(--bad); }
+.raw-box.is-good .lbl { color: var(--good); }
+.raw-frame { background: var(--surface); box-shadow: var(--shadow-2); padding: 34px 38px; font-size: 22px; line-height: 1.55; flex: 1; }
+.raw-frame.is-wall { color: var(--ink-2); word-spacing: .08em; }
+.raw-frame.is-structured h1 { font: 700 36px/1.1 var(--f-display); font-stretch: 86%; margin: 0 0 12px; }
+.raw-frame.is-structured h2 { font: 700 26px/1.2 var(--f-display); font-stretch: 86%; margin: 16px 0 8px; color: var(--ink-2); }
+.raw-frame.is-structured p { margin: 0 0 10px; color: var(--ink-2); font-size: 19px; }
+.raw-frame.is-structured ul { margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 19px; }
+.raw-frame.is-structured a { color: var(--accent); }
+.raw-frame.is-structured button { background: var(--accent); color: #fff; border: 0; padding: 10px 18px; font: 600 16px/1 var(--f-body); margin-top: 12px; cursor: pointer; }
+
+/* ---------- document anatomy ---------- */
+.doc-anat { display: grid; grid-template-columns: 480px minmax(0, 1fr); gap: 72px; align-items: start; flex: 1; margin-top: 32px; }
+.doc-box { border: 2px solid color-mix(in srgb, var(--ink) 18%, transparent); padding: 28px; position: relative; }
+.doc-box > .box-lbl { position: absolute; left: 16px; top: -14px; background: var(--bg); padding: 2px 10px; font: 600 17px/1 var(--f-mono); color: var(--ink-3); }
+.doc-box.is-html { padding: 32px; }
+.doc-box.is-html > .box-lbl { color: var(--accent); font-size: 19px; }
+.doc-box.is-head { border-color: color-mix(in srgb, var(--accent) 45%, transparent); margin-bottom: 16px; }
+.doc-box.is-head > .box-lbl { color: var(--accent); background: var(--bg); }
+.doc-box.is-body { border-color: color-mix(in srgb, var(--good) 45%, transparent); }
+.doc-box.is-body > .box-lbl { color: var(--good); background: var(--bg); }
+.doc-box .items { display: flex; flex-direction: column; gap: 8px; }
+.doc-box .item { font: 500 19px/1 var(--f-mono); color: var(--ink-2); padding: 8px 12px; background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.doc-box .item b { color: var(--ink); font-weight: 600; }
+.doc-side { display: flex; flex-direction: column; gap: 22px; padding-top: 4px; }
+
+/* ---------- head deep-dive ---------- */
+.head-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 36px; }
+.head-card { background: var(--surface); box-shadow: var(--shadow-1); padding: 28px 28px 30px; display: flex; flex-direction: column; gap: 12px; }
+.head-card .tag { font: 700 22px/1 var(--f-mono); color: var(--accent); }
+.head-card h3 { font: 700 30px/1.1 var(--f-display); font-stretch: 86%; margin: 0; }
+.head-card p { font-size: 21px; line-height: 1.42; color: var(--ink-2); margin: 0; }
+
+/* ---------- element reference ---------- */
+.el-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.el-card { background: var(--surface); box-shadow: var(--shadow-1); padding: 26px 26px 28px; display: flex; flex-direction: column; gap: 10px; }
+.el-card .e-tag { font: 700 28px/1 var(--f-mono); color: var(--accent); }
+.el-card .e-label { font: 600 12px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.el-card p { font-size: 19px; line-height: 1.42; color: var(--ink-2); margin: 0; }
+
+/* ---------- heading scale ---------- */
+.h-demo { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 72px; align-items: start; margin-top: 32px; }
+.h-scale { display: flex; flex-direction: column; gap: 0; }
+.h-scale div { display: flex; align-items: baseline; gap: 20px; padding: 16px 0; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ink) 8%, transparent); }
+.h-scale .h-num { font: 600 14px/1 var(--f-mono); letter-spacing: .12em; color: var(--ink-3); min-width: 28px; }
+.h-scale .h-text { font-family: var(--f-display); font-weight: 700; }
+.h-scale div:nth-child(1) .h-text { font-size: 48px; line-height: 1; color: var(--ink); }
+.h-scale div:nth-child(2) .h-text { font-size: 36px; line-height: 1.05; color: var(--ink); }
+.h-scale div:nth-child(3) .h-text { font-size: 28px; line-height: 1.1; color: var(--ink); }
+.h-scale div:nth-child(4) .h-text { font-size: 23px; line-height: 1.15; color: var(--ink-2); }
+.h-scale div:nth-child(5) .h-text { font-size: 19px; line-height: 1.2; color: var(--ink-2); }
+.h-scale div:nth-child(6) .h-text { font-size: 17px; line-height: 1.2; color: var(--ink-3); }
+
+/* ---------- attribute anatomy ---------- */
+.attr-anat { display: flex; align-items: flex-end; gap: 0; font: 700 42px/1 var(--f-mono); margin-top: 40px; flex-wrap: wrap; }
+.attr-part { display: inline-flex; flex-direction: column; align-items: center; gap: 14px; }
+.attr-tick { width: 2px; height: 24px; background: color-mix(in srgb, var(--ink) 22%, transparent); }
+.attr-lbl { font: 500 17px/1 var(--f-body); color: var(--ink-3); letter-spacing: 0; white-space: nowrap; }
+.a-bracket { color: var(--ink-3); }
+.a-name { color: var(--accent); }
+.a-attr { color: var(--tok-attr); }
+.a-eq { color: var(--ink-3); }
+.a-val { color: var(--tok-string); }
+.a-content { color: var(--code-fg); background: var(--code-bg); padding: 0 4px; }
+
+/* ---------- link anatomy ---------- */
+.link-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 40px; }
+.link-part { display: flex; flex-direction: column; gap: 14px; padding: 28px; background: var(--surface); box-shadow: var(--shadow-1); }
+.link-part .attr-name-l { font: 700 22px/1 var(--f-mono); color: var(--tok-attr); }
+.link-part .attr-val-l { font: 500 20px/1 var(--f-mono); color: var(--tok-string); margin-bottom: 4px; }
+.link-part h3 { font: 700 30px/1.1 var(--f-display); font-stretch: 86%; margin: 0; }
+.link-part p { font-size: 21px; line-height: 1.42; color: var(--ink-2); margin: 0; }
+
+/* ---------- button vs link ---------- */
+.bvl { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 36px; }
+.bvl-card { display: flex; flex-direction: column; gap: 20px; padding: 36px 36px 38px; box-shadow: var(--shadow-1); background: var(--surface); }
+.bvl-card .bvl-tag { font: 700 28px/1 var(--f-mono); }
+.bvl-card.is-btn .bvl-tag { color: var(--good); }
+.bvl-card.is-link .bvl-tag { color: var(--accent); }
+.bvl-card h3 { font: 700 34px/1.1 var(--f-display); font-stretch: 86%; margin: 0; }
+.bvl-card .bvl-use { font: 600 15px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 0; }
+.bvl-card ul { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; font-size: 23px; line-height: 1.4; color: var(--ink-2); }
+.bvl-card ul code { color: var(--ink); }
+.bvl-rule { display: flex; align-items: center; gap: 18px; padding: 22px 28px; background: color-mix(in srgb, var(--accent) 9%, var(--surface)); margin-top: 28px; box-shadow: var(--shadow-1); }
+.bvl-rule svg { width: 32px; height: 32px; color: var(--accent); flex: none; }
+.bvl-rule p { font-size: 26px; font-weight: 600; line-height: 1.35; margin: 0; }
+
+/* ---------- classwork ---------- */
+.tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 40px; }
+.tier { display: flex; flex-direction: column; gap: 16px; padding: 34px 34px 36px; background: var(--surface); box-shadow: var(--shadow-1); }
+.tier__k { display: flex; justify-content: space-between; align-items: center; font: 700 15px/1 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; }
+.tier__k span:last-child { color: var(--ink-3); font-weight: 600; }
+.tier.base .tier__k span:first-child { color: var(--accent); }
+.tier h3 { font: 700 34px/1.08 var(--f-display); font-stretch: 86%; margin: 0; }
+.tier ul { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; font-size: 22px; line-height: 1.42; color: var(--ink-2); }
+.tier ul code { color: var(--ink); }
+
+/* ---------- summary flips ---------- */
+.flips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 34px; --flip-h: 300px; }
+.flip__back p { font-size: 24px; line-height: 1.42; margin: 0; }
+.flip__back { --flip-back: var(--ink); }
+.flip__front .q { margin-top: auto; font: 600 15px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+.flip__front .q svg { width: 18px; height: 18px; }
+
+/* ---------- homework / thanks ---------- */
+.hw { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 34px; }
+.hw .tier ul { font-size: 21px; }
+.submit { margin-top: 28px; display: flex; gap: 40px; align-items: center; font-size: 23px; color: var(--ink-2); }
+.submit b { color: var(--ink); }
+.submit svg { width: 26px; height: 26px; color: var(--accent); }
+.s-thanks .display { font-size: 200px; }
+</style>
+</head>
+<body>
+<div class="deck">
+<div class="stage">
+
+<!-- ============================== 01 COVER ============================== -->
+<section class="slide s-cover bench" data-phase="intro" data-title="The Document">
+  <div class="cover-copy">
+    <p class="eyebrow"><b>H/04</b> HTML &amp; CSS module, lecture 4</p>
+    <h1 class="display">The<br>Document</h1>
+    <p class="lead">HTML document structure, content elements, and why buttons and links are not the same thing.</p>
+    <dl class="cover-meta">
+      <div><dt>Theme</dt><dd>HTML structure</dd></div>
+      <div><dt>Project</dt><dd>A restaurant menu page</dd></div>
+      <div><dt>Elements today</dt><dd>12 tags</dd></div>
+      <div><dt>Length</dt><dd>2 hours, one break</dd></div>
+    </dl>
+  </div>
+  <div class="cover-art" aria-hidden="true">
+    <div>&lt;!<span>DOCTYPE</span> html&gt;</div>
+    <div>&lt;<span>html</span> <em>lang</em>=<s>"en"</s>&gt;</div>
+    <div>&nbsp;&nbsp;&lt;<span>head</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>meta</span> <em>charset</em>=<s>"utf-8"</s>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>meta</span> <em>name</em>=<s>"viewport"</s></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>content</em>=<s>"width=device-width"</s>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>title</span>&gt;<s>Le Bistro</s>&lt;/<span>title</span>&gt;</div>
+    <div>&nbsp;&nbsp;&lt;/<span>head</span>&gt;</div>
+    <div>&nbsp;&nbsp;&lt;<span>body</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>h1</span>&gt;<s>Menu</s>&lt;/<span>h1</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>p</span>&gt;<s>Today's specials.</s>&lt;/<span>p</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>ul</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>li</span>&gt;<s>Coq au vin</s>&lt;/<span>li</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>li</span>&gt;<s>Ratatouille</s>&lt;/<span>li</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span>ul</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>a</span> <em>href</em>=<s>"menu.html"</s>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<s>See full menu</s></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span>a</span>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span>button</span> <em>type</em>=<s>"button"</s>&gt;</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<s>Add to order</s></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span>button</span>&gt;</div>
+    <div>&nbsp;&nbsp;&lt;/<span>body</span>&gt;</div>
+    <div>&lt;/<span>html</span>&gt;</div>
+  </div>
+  <aside class="notes">
+    <p>Open with the cover. Point at the code on the right: "This is what a browser actually reads. By the end of today you can write this from scratch and explain every line." Today is about the structure — not styling yet, that comes in the next lecture.</p>
+  </aside>
+</section>
+
+<!-- ============================== 02 ROUTE ============================== -->
+<section class="slide bench" data-phase="intro" data-title="Today's route">
+  <p class="eyebrow"><b>H/04</b> Today's route, 120 minutes</p>
+  <h2 class="h1 mt-s">Problem first. Then the tool.</h2>
+  <p class="lead mt-m">We see what breaks without structure, then build a proper document from scratch. Break when the room needs it.</p>
+  <div class="route" style="margin-top:100px">
+    <div class="route__track">
+      <div class="stop"><span class="stop__t">5 min</span><span class="stop__dot"></span><span class="stop__l">Q&amp;A</span><span class="stop__d">Questions from last time</span></div>
+      <div class="stop"><span class="stop__t">6 min</span><span class="stop__dot"></span><span class="stop__l">Problem</span><span class="stop__d">A page with no structure</span></div>
+      <div class="stop is-key"><span class="stop__t">20 min</span><span class="stop__dot"></span><span class="stop__l">Structure</span><span class="stop__d">DOCTYPE, html, head, body</span></div>
+      <div class="stop"><span class="stop__t">8 min</span><span class="stop__dot"></span><span class="stop__l">CW 1</span><span class="stop__d">Build the skeleton</span></div>
+      <div class="stop is-key"><span class="stop__t">25 min</span><span class="stop__dot"></span><span class="stop__l">Elements</span><span class="stop__d">Headings, text, lists, links, images</span></div>
+      <div class="stop is-key"><span class="stop__t">12 min</span><span class="stop__dot"></span><span class="stop__l">Btn vs Link</span><span class="stop__d">The key distinction</span></div>
+      <div class="stop"><span class="stop__t">8 min</span><span class="stop__dot"></span><span class="stop__l">Quiz</span><span class="stop__d">Button or link?</span></div>
+      <div class="stop"><span class="stop__t">15 min</span><span class="stop__dot"></span><span class="stop__l">CW 2</span><span class="stop__d">A restaurant menu page</span></div>
+      <div class="stop"><span class="stop__t">6 min</span><span class="stop__dot"></span><span class="stop__l">Summary</span><span class="stop__d">You explain it back</span></div>
+      <div class="stop"><span class="stop__t">2 min</span><span class="stop__dot"></span><span class="stop__l">Homework</span><span class="stop__d">Base, Plus, Pro</span></div>
+      <div class="stop"><span class="stop__t">9 min</span><span class="stop__dot"></span><span class="stop__l">Break</span><span class="stop__d">Coffee</span></div>
+    </div>
+  </div>
+  <div class="method mt-auto">
+    <div><span class="pn">Rule 01</span><p><b>Problem first.</b> You feel the pain before you get the tool.</p></div>
+    <div><span class="pn">Rule 02</span><p><b>First look.</b> One example, the simplest version that works.</p></div>
+    <div><span class="pn">Rule 03</span><p><b>Deep dive.</b> The rest of the theme, done properly.</p></div>
+    <div><span class="pn">Rule 04</span><p><b>Classwork.</b> You type it, not me.</p></div>
+  </div>
+  <aside class="notes"><p>Show the structure once so students know where we are. The rail at the top of every slide shows the current block. Press B when the room needs a break — there is no set break slide.</p></aside>
+</section>
+
+<!-- ============================== 03 Q&A ============================== -->
+<section class="slide bench" data-phase="qa" data-title="Questions from last time">
+  <div class="qa-grid">
+    <div class="stack" style="--gap:28px">
+      <p class="eyebrow"><b>Q/01</b> Before we start</p>
+      <h2 class="qa-big">Questions from last time?</h2>
+      <p class="lead">Anything from L01–L03 that still feels unclear. If the room is quiet, we answer these three.</p>
+    </div>
+    <div class="qa-list">
+      <div class="qa-item" data-step="1">
+        <span class="pn">01</span>
+        <h3>What does a browser actually do with a file we send it?</h3>
+        <div class="reveal-box" data-reveal><button class="reveal-box__cover">[ show answer ]</button>
+          <p>It parses the HTML into a tree of objects (the DOM), applies styles, and renders pixels on screen.</p></div>
+      </div>
+      <div class="qa-item" data-step="2">
+        <span class="pn">02</span>
+        <h3>What is the difference between HTML, CSS, and JavaScript?</h3>
+        <div class="reveal-box" data-reveal><button class="reveal-box__cover">[ show answer ]</button>
+          <p>HTML is structure (what is on the page), CSS is style (how it looks), JavaScript is behavior (what it does).</p></div>
+      </div>
+      <div class="qa-item" data-step="3">
+        <span class="pn">03</span>
+        <h3>Why do we need to declare a language with <code>lang="en"</code>?</h3>
+        <div class="reveal-box" data-reveal><button class="reveal-box__cover">[ show answer ]</button>
+          <p>Screen readers use it to choose the right voice. Search engines use it for regional results. Spell-checkers use it too.</p></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>5 minutes. Let students ask first. Only then press next to show backup questions one by one; click the cover to reveal each answer.</p></aside>
+</section>
+
+<!-- ============================== 04 PROBLEM ============================== -->
+<section class="slide bench" data-phase="problem" data-title="A page with no structure">
+  <p class="eyebrow"><b>P/01</b> Problem first</p>
+  <h2 class="h1 mt-s">What does a browser do with raw text?</h2>
+  <p class="lead mt-m">Open a <code>.txt</code> file in a browser — or put all your content with no tags. This is what the browser gets.</p>
+  <div class="raw-vs">
+    <div class="raw-box is-bad">
+      <span class="lbl">Without structure</span>
+      <div class="raw-frame is-wall">
+        Le Bistro Menu Today's Specials Coq au vin Slow-braised chicken, mushrooms, lardons. €18 Ratatouille Seasonal vegetables, herbed olive oil. €14 Reserve a table Call us at +995 32 200 0001 or click the button below to book online. Book now
+      </div>
+    </div>
+    <div class="raw-box is-good">
+      <span class="lbl">With HTML structure</span>
+      <div class="raw-frame is-structured">
+        <h1>Le Bistro — Menu</h1>
+        <h2>Today's Specials</h2>
+        <ul>
+          <li><b>Coq au vin</b> — Slow-braised chicken, mushrooms, lardons. €18</li>
+          <li><b>Ratatouille</b> — Seasonal vegetables, herbed olive oil. €14</li>
+        </ul>
+        <h2>Reserve a table</h2>
+        <p>Call us at <a href="tel:+99532200001">+995 32 200 0001</a> or book online.</p>
+        <button type="button">Book now</button>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Show both sides. Ask: "which one can a screen reader navigate? Which one can Google index for 'restaurant Tbilisi'? Which one can you navigate with Tab?" HTML gives meaning to content — the browser, search engines, and assistive tech all depend on it.</p></aside>
+</section>
+
+<!-- ============================== 05 FIRST LOOK: MINIMAL DOCUMENT ============================== -->
+<section class="slide bench" data-phase="structure" data-title="The minimal valid document">
+  <p class="eyebrow"><b>S/01</b> First look</p>
+  <h2 class="h1 mt-s">The smallest valid HTML document</h2>
+  <p class="lead mt-m">Every HTML page needs exactly these four things. Everything else is content.</p>
+  <div class="split-4-8 mt-l items-start" style="gap:64px">
+    <script type="text/plain" data-lang="html" data-file="index.html" class="is-sm">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1">
+    <title>Le Bistro</title>
+  </head>
+  <body>
+    <h1>Welcome</h1>
+  </body>
+</html>
+    </script>
+    <div class="stack" style="--gap:22px">
+      <div class="card" data-step="1">
+        <p class="card__k">Line 1</p>
+        <h3 class="h3"><code>&lt;!DOCTYPE html&gt;</code></h3>
+        <p class="small muted">Not a tag — a declaration. Tells the browser: "parse this as modern HTML5, not quirks mode."</p>
+      </div>
+      <div class="card" data-step="2">
+        <p class="card__k">Lines 2–10</p>
+        <h3 class="h3"><code>&lt;html lang="en"&gt;</code></h3>
+        <p class="small muted">The root element. <code>lang</code> is the document's language — used by screen readers and search engines.</p>
+      </div>
+      <div class="card" data-step="3">
+        <p class="card__k">Lines 3–7 · Inside <code>&lt;html&gt;</code></p>
+        <h3 class="h3"><code>&lt;head&gt;</code> and <code>&lt;body&gt;</code></h3>
+        <p class="small muted">Two direct children, always. <code>head</code> is metadata — nothing visible. <code>body</code> is everything the user sees.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Type this live. Use VS Code's <code>!</code> emmet shortcut to generate it, then explain each line. Students should be surprised at how little is needed for a valid page.</p></aside>
+</section>
+
+<!-- ============================== 06 DOCTYPE ============================== -->
+<section class="slide bench" data-phase="structure" data-title="What DOCTYPE does">
+  <div class="split-5-7 fill items-center">
+    <div class="stack" style="--gap:26px">
+      <p class="eyebrow"><b>S/02</b> The declaration</p>
+      <h2 class="h1"><code>&lt;!DOCTYPE html&gt;</code></h2>
+      <p class="lead">It is not a tag. It is a declaration to the browser's rendering engine.</p>
+    </div>
+    <div class="quiz" data-quiz>
+      <p class="quiz__q">What happens without DOCTYPE?</p>
+      <div class="quiz__opts">
+        <button class="quiz__opt">The page does not load at all</button>
+        <button class="quiz__opt">The CSS stops working</button>
+        <button class="quiz__opt" data-correct>The browser enters "quirks mode" and renders inconsistently</button>
+        <button class="quiz__opt">JavaScript throws an error</button>
+      </div>
+      <p class="quiz__explain">Without DOCTYPE, most browsers enter quirks mode — a backwards-compatibility mode that mimics browser bugs from the 1990s. Layouts break in unpredictable ways. Always put DOCTYPE on line 1.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Hands up first, then click. The "quirks mode" answer surprises students. It's a real problem: old tutorials online sometimes omit DOCTYPE and the pages look fine in Chrome — until a different browser loads them.</p></aside>
+</section>
+
+<!-- ============================== 07 THE HEAD ============================== -->
+<section class="slide bench" data-phase="structure" data-title="What goes in the head">
+  <p class="eyebrow"><b>S/03</b> The head element</p>
+  <h2 class="h1 mt-s">The head: metadata, not content</h2>
+  <p class="lead mt-m">Nothing in <code>&lt;head&gt;</code> is visible in the page — but every item matters.</p>
+  <div class="head-grid">
+    <div class="head-card" data-step="1">
+      <span class="tag">&lt;meta charset="utf-8"&gt;</span>
+      <h3>Character encoding</h3>
+      <p>Tells the browser which characters are in the file. Without it, Georgian text (and emoji) show as gibberish.</p>
+    </div>
+    <div class="head-card" data-step="2">
+      <span class="tag">&lt;meta name="viewport" …&gt;</span>
+      <h3>Viewport</h3>
+      <p>Tells mobile browsers to render at the device width rather than zooming out to a desktop view. Needed for any responsive layout.</p>
+    </div>
+    <div class="head-card" data-step="3">
+      <span class="tag">&lt;title&gt;</span>
+      <h3>Page title</h3>
+      <p>Shows in the browser tab, bookmark, and search results. Write it as if it is the only thing a user sees about your page.</p>
+    </div>
+    <div class="head-card" data-step="4">
+      <span class="tag">&lt;link rel="stylesheet" href="…"&gt;</span>
+      <h3>Stylesheet link</h3>
+      <p>Connects an external CSS file. We will add this in the CSS lecture. It has no visible content — it is a <em>void element</em>.</p>
+    </div>
+    <div class="head-card" data-step="5">
+      <span class="tag">&lt;link rel="icon" href="…"&gt;</span>
+      <h3>Favicon</h3>
+      <p>The small icon in the browser tab. A 32×32 PNG works; <code>.ico</code> also works. Not required, but memorable.</p>
+    </div>
+    <div class="head-card" data-step="6">
+      <span class="tag">&lt;meta name="description" …&gt;</span>
+      <h3>Description</h3>
+      <p>A short summary that appears under the page title in Google search results. Keep it under 160 characters.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Go through each card. Ask the class what each one does before revealing. The charset one: "try removing this and type in Georgian — watch what happens."</p></aside>
+</section>
+
+<!-- ============================== 08 VIEWPORT ============================== -->
+<section class="slide bench" data-phase="structure" data-title="The viewport meta tag">
+  <p class="eyebrow"><b>S/04</b> The viewport meta</p>
+  <h2 class="h2 mt-s">Why <code>width=device-width</code> matters</h2>
+  <div class="split-7-5 mt-l items-start" style="gap:72px">
+    <div class="stack" style="--gap:28px">
+      <script type="text/plain" data-lang="html" data-file="index.html">
+<meta name="viewport"
+  content="width=device-width, initial-scale=1">
+      </script>
+      <div class="callout">
+        <i data-icon="smartphone"></i>
+        <div>
+          <p class="h4">Without this meta tag</p>
+          <p class="small muted mt-s">Mobile browsers assume the page was designed for a 980 px desktop. They zoom out to fit it, making text tiny. The user must pinch-zoom to read anything. Your carefully structured page looks broken.</p>
+        </div>
+      </div>
+      <div class="callout is-good">
+        <i data-icon="check-circle"></i>
+        <div>
+          <p class="h4">With this meta tag</p>
+          <p class="small muted mt-s">The browser renders at the actual device width. A phone renders at 390 px, a tablet at 768 px. CSS media queries then let you adapt the layout per screen size — which we cover in a later lecture.</p>
+        </div>
+      </div>
+    </div>
+    <div class="stack" style="--gap:20px; padding-top:4px">
+      <p class="eyebrow"><b>S/04</b> What each part does</p>
+      <table class="table">
+        <tr><th>Part</th><th>Meaning</th></tr>
+        <tr><td><code>width=device-width</code></td><td>Viewport = the physical screen width</td></tr>
+        <tr><td><code>initial-scale=1</code></td><td>Start at 1× zoom, no shrinking</td></tr>
+      </table>
+      <p class="small muted">Always put this meta tag in the head. Never set <code>user-scalable=no</code> — it breaks accessibility by preventing pinch-zoom for visually impaired users.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Open DevTools device mode. Toggle it off and on while looking at a page without the viewport meta to show the difference. Students are often surprised this one tag makes such a visible change.</p></aside>
+</section>
+
+<!-- ============================== 09 DOCUMENT ANATOMY ============================== -->
+<section class="slide bench" data-phase="structure" data-title="Document anatomy">
+  <p class="eyebrow"><b>S/05</b> The full picture</p>
+  <h2 class="h2 mt-s">Every HTML document has this shape</h2>
+  <div class="doc-anat">
+    <div class="doc-box is-html">
+      <span class="box-lbl">&lt;html&gt;</span>
+      <div class="doc-box is-head">
+        <span class="box-lbl">&lt;head&gt; — metadata</span>
+        <div class="items">
+          <div class="item"><b>&lt;meta charset="utf-8"&gt;</b></div>
+          <div class="item"><b>&lt;meta name="viewport" …&gt;</b></div>
+          <div class="item"><b>&lt;title&gt;</b>Le Bistro&lt;/title&gt;</div>
+          <div class="item"><b>&lt;link rel="stylesheet" href="style.css"&gt;</b></div>
+        </div>
+      </div>
+      <div class="doc-box is-body">
+        <span class="box-lbl">&lt;body&gt; — visible content</span>
+        <div class="items">
+          <div class="item"><b>&lt;h1&gt;</b>Menu&lt;/h1&gt;</div>
+          <div class="item"><b>&lt;p&gt;</b>Today's specials…&lt;/p&gt;</div>
+          <div class="item"><b>&lt;ul&gt;&lt;li&gt;</b>Coq au vin&lt;/li&gt;…&lt;/ul&gt;</div>
+          <div class="item"><b>&lt;a href="…"&gt;</b>Reserve&lt;/a&gt;</div>
+          <div class="item"><b>&lt;button&gt;</b>Order now&lt;/button&gt;</div>
+        </div>
+      </div>
+    </div>
+    <div class="doc-side">
+      <p class="lead">The tree has two parts: metadata the browser uses, and content the user sees.</p>
+      <div class="card">
+        <p class="card__k">The rule</p>
+        <h3 class="h3">Head = for the browser.<br>Body = for the user.</h3>
+        <p class="small muted mt-m">If you are not sure where something goes: if it is visible, it goes in the body. If it is invisible metadata or a resource link, it goes in the head.</p>
+      </div>
+      <div class="callout">
+        <i data-icon="lightbulb"></i>
+        <div><p class="small">Opening DevTools in any browser and looking at the Elements panel shows you this exact tree for any page on the web. Try it now.</p></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Point at the diagram. "Everything in orange is the head — metadata. Everything in green is the body — what the user sees." Ask: where does a &lt;script&gt; tag go? (Usually end of body, or head with defer.) Where does a &lt;link&gt; to a font go? (Head.)</p></aside>
+</section>
+
+<!-- ============================== 10 HEAD OR BODY QUIZ ============================== -->
+<section class="slide bench" data-phase="structure" data-title="Head or body?">
+  <p class="eyebrow"><b>S/06</b> Quick check</p>
+  <h2 class="h2 mt-s">Head or body?</h2>
+  <p class="lead mt-m">For each item, say whether it belongs in <code>&lt;head&gt;</code> or <code>&lt;body&gt;</code>. Hands up, then we check.</p>
+  <div class="grid cols-3 mt-l" style="--gap:22px">
+    <div class="card" data-step="1">
+      <p class="card__k">Item A</p>
+      <h3 class="h4"><code>&lt;title&gt;Le Bistro&lt;/title&gt;</code></h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Head.</b> The title is not visible on the page — it shows only in the browser tab and search results.</p>
+      </div>
+    </div>
+    <div class="card" data-step="2">
+      <p class="card__k">Item B</p>
+      <h3 class="h4"><code>&lt;h1&gt;Today's Menu&lt;/h1&gt;</code></h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Body.</b> Headings are visible content. Anything the user reads or sees goes in the body.</p>
+      </div>
+    </div>
+    <div class="card" data-step="3">
+      <p class="card__k">Item C</p>
+      <h3 class="h4"><code>&lt;link rel="stylesheet" href="style.css"&gt;</code></h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Head.</b> It is a resource link — no visible output, but the browser needs it to style the page.</p>
+      </div>
+    </div>
+    <div class="card" data-step="4">
+      <p class="card__k">Item D</p>
+      <h3 class="h4"><code>&lt;img src="logo.png" alt="Logo"&gt;</code></h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Body.</b> An image is visible content. It goes in the body, usually inside a meaningful element.</p>
+      </div>
+    </div>
+    <div class="card" data-step="5">
+      <p class="card__k">Item E</p>
+      <h3 class="h4"><code>&lt;meta name="description" content="…"&gt;</code></h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Head.</b> It is metadata — not visible, used by search engines and social media link previews.</p>
+      </div>
+    </div>
+    <div class="card" data-step="6">
+      <p class="card__k">Item F</p>
+      <h3 class="h4"><code>&lt;p&gt;Open Tuesday–Sunday.&lt;/p&gt;</code></h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Body.</b> A paragraph is visible content for the user. Always in the body.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Reveal each card one by one. Students often hesitate on the stylesheet link. Reinforce the rule: "If the user sees it, body. If the browser uses it but the user does not see it, head."</p></aside>
+</section>
+
+<!-- ============================== 11 CLASSWORK 1 ============================== -->
+<section class="slide bench" data-phase="structure" data-title="Classwork 1 · The skeleton">
+  <p class="eyebrow"><b>CW/01</b> 8 minutes</p>
+  <h2 class="h1 mt-s">Build the skeleton</h2>
+  <p class="lead mt-m">Create a new file in VS Code. Write a valid HTML document from memory — no copy-paste.</p>
+  <div class="tiers">
+    <div class="tier base">
+      <div class="tier__k"><span>Base</span><span>required</span></div>
+      <h3>Valid document</h3>
+      <ul>
+        <li>DOCTYPE on line 1</li>
+        <li><code>&lt;html lang="en"&gt;</code></li>
+        <li>charset and viewport metas</li>
+        <li>A meaningful <code>&lt;title&gt;</code></li>
+        <li>A heading in the body</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier__k"><span>Plus</span><span>go further</span></div>
+      <h3>Fill the head</h3>
+      <ul>
+        <li>Add a <code>meta description</code></li>
+        <li>Link a (not-yet-existing) <code>style.css</code></li>
+        <li>Link a favicon</li>
+        <li>Open in browser and check the tab title</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier__k"><span>Pro</span><span>challenge</span></div>
+      <h3>Inspect and compare</h3>
+      <ul>
+        <li>Open the page in browser DevTools</li>
+        <li>Find your <code>&lt;title&gt;</code> in the Elements panel</li>
+        <li>Remove the viewport meta, view on a phone simulator — describe what changed</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes"><p>8 minutes. Walk around while students type. Common mistake: forgetting to close tags or using lowercase doctype (both work, but reinforce the canonical form). Check that everyone opens the file in a browser before moving on.</p></aside>
+</section>
+
+<!-- ============================== 12 CONTENT ELEMENTS INTRO ============================== -->
+<section class="slide bench" data-phase="elements" data-title="Content elements">
+  <p class="eyebrow"><b>E/01</b> What goes in the body</p>
+  <h2 class="h1 mt-s">The elements you use every day</h2>
+  <p class="lead mt-m">These twelve cover ninety percent of real pages. Learn them well and the others follow easily.</p>
+  <div class="el-grid mt-l">
+    <div class="el-card" data-step="1"><span class="e-label">heading</span><span class="e-tag">&lt;h1&gt;–&lt;h6&gt;</span><p>Six levels of heading. Convey hierarchy — not visual size. Use only one h1 per page.</p></div>
+    <div class="el-card" data-step="2"><span class="e-label">paragraph</span><span class="e-tag">&lt;p&gt;</span><p>A block of text. The browser adds spacing above and below. Default for prose.</p></div>
+    <div class="el-card" data-step="3"><span class="e-label">list</span><span class="e-tag">&lt;ul&gt; / &lt;ol&gt;</span><p>Unordered (bullets) or ordered (numbers). Items go inside <code>&lt;li&gt;</code>.</p></div>
+    <div class="el-card" data-step="4"><span class="e-label">inline</span><span class="e-tag">&lt;strong&gt; / &lt;em&gt;</span><p><code>&lt;strong&gt;</code> = important, renders bold. <code>&lt;em&gt;</code> = stress emphasis, renders italic.</p></div>
+    <div class="el-card" data-step="5"><span class="e-label">link</span><span class="e-tag">&lt;a&gt;</span><p>Navigates to a URL or another page. Requires <code>href</code>. Use for navigation.</p></div>
+    <div class="el-card" data-step="6"><span class="e-label">image</span><span class="e-tag">&lt;img&gt;</span><p>Embeds an image. Requires <code>src</code> and <code>alt</code>. A void element — no closing tag.</p></div>
+    <div class="el-card" data-step="7"><span class="e-label">button</span><span class="e-tag">&lt;button&gt;</span><p>Triggers an action. Use for forms and interactivity — not for navigation.</p></div>
+    <div class="el-card" data-step="8"><span class="e-label">line break</span><span class="e-tag">&lt;br&gt;</span><p>A single line break. A void element. Use sparingly — prefer margins in CSS.</p></div>
+    <div class="el-card" data-step="9"><span class="e-label">horizontal rule</span><span class="e-tag">&lt;hr&gt;</span><p>A thematic break. Marks a change of topic. Renders as a line, but has semantic meaning.</p></div>
+    <div class="el-card" data-step="10"><span class="e-label">definition list</span><span class="e-tag">&lt;dl&gt;</span><p>Term-description pairs. Great for glossaries, menus with descriptions, key-value data.</p></div>
+    <div class="el-card" data-step="11"><span class="e-label">container</span><span class="e-tag">&lt;div&gt;</span><p>A generic block container with no meaning. Use only when no semantic element fits.</p></div>
+    <div class="el-card" data-step="12"><span class="e-label">inline container</span><span class="e-tag">&lt;span&gt;</span><p>A generic inline container with no meaning. Use for styling a run of text.</p></div>
+  </div>
+  <aside class="notes"><p>Go through each card. For each one, ask the class to give a real example from any website they know. Emphasize: "we use these every single day."</p></aside>
+</section>
+
+<!-- ============================== 13 HEADINGS ============================== -->
+<section class="slide bench" data-phase="elements" data-title="Headings h1–h6">
+  <p class="eyebrow"><b>E/02</b> Heading elements</p>
+  <h2 class="h2 mt-s">Six levels — but only one is the title</h2>
+  <div class="h-demo">
+    <div class="h-scale">
+      <div><span class="h-num">h1</span><span class="h-text">Le Bistro</span></div>
+      <div><span class="h-num">h2</span><span class="h-text">Today's Specials</span></div>
+      <div><span class="h-num">h3</span><span class="h-text">Main Courses</span></div>
+      <div><span class="h-num">h4</span><span class="h-text">Coq au Vin</span></div>
+      <div><span class="h-num">h5</span><span class="h-text">Description</span></div>
+      <div><span class="h-num">h6</span><span class="h-text">Allergens</span></div>
+    </div>
+    <div class="stack" style="--gap:22px; padding-top:8px">
+      <script type="text/plain" data-lang="html" class="is-sm">
+<h1>Le Bistro</h1>
+<h2>Today's Specials</h2>
+<h3>Main Courses</h3>
+<h4>Coq au Vin</h4>
+<p>Slow-braised chicken, mushrooms, lardons.</p>
+      </script>
+      <div class="callout is-warn">
+        <i data-icon="triangle-alert"></i>
+        <div>
+          <p class="h4">Do not pick headings for their visual size</p>
+          <p class="small muted mt-s">Use CSS to control how big a heading looks. The heading level communicates hierarchy to search engines and screen readers — a screen reader user navigates pages by jumping between headings. A wrong level breaks that navigation.</p>
+        </div>
+      </div>
+      <div class="callout">
+        <i data-icon="lightbulb"></i>
+        <div>
+          <p class="small">Rule: one <code>&lt;h1&gt;</code> per page — it is the page's title. Never skip levels (no h1 → h3 with no h2 in between).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Show the visual scale on the left. Then open any news site: "find the h1." They will see the article title. Ask: "why is the site name usually NOT in an h1?" (It would be a new h1 on every page — the article title is the page's topic.)</p></aside>
+</section>
+
+<!-- ============================== 14 HEADING HIERARCHY ============================== -->
+<section class="slide bench" data-phase="elements" data-title="Heading hierarchy">
+  <p class="eyebrow"><b>E/03</b> Hierarchy matters</p>
+  <h2 class="h2 mt-s">The heading outline of a real page</h2>
+  <div class="split-4-8 mt-l items-start" style="gap:72px">
+    <div class="stack" style="--gap:20px">
+      <div class="card is-flat">
+        <p class="card__k">Good outline</p>
+        <div style="font:500 21px/1.8 var(--f-mono); color:var(--ink-2)">
+          <div style="color:var(--accent)">h1: Le Bistro</div>
+          <div style="padding-left:24px;color:var(--ink)">h2: Menu</div>
+          <div style="padding-left:48px;color:var(--ink-2)">h3: Starters</div>
+          <div style="padding-left:48px;color:var(--ink-2)">h3: Mains</div>
+          <div style="padding-left:72px;color:var(--ink-3)">h4: Coq au vin</div>
+          <div style="padding-left:24px;color:var(--ink)">h2: Reserve</div>
+        </div>
+      </div>
+      <div class="card is-flat">
+        <p class="card__k" style="color:var(--bad)">Broken outline</p>
+        <div style="font:500 21px/1.8 var(--f-mono); color:var(--ink-2)">
+          <div style="color:var(--accent)">h1: Le Bistro</div>
+          <div style="padding-left:24px;color:var(--bad)">h3: Menu ←</div>
+          <div style="padding-left:48px;color:var(--bad)">h5: Starters ←</div>
+          <div style="padding-left:24px;color:var(--ink)">h2: Reserve</div>
+        </div>
+      </div>
+    </div>
+    <div class="stack" style="--gap:22px; padding-top:4px">
+      <p class="lead">A heading outline is like a table of contents. Screen readers read it aloud for navigation.</p>
+      <ul class="list" style="--gap:16px">
+        <li><i data-icon="check"></i><span>Use <code>h1</code> once — it names the page.</span></li>
+        <li><i data-icon="check"></i><span>Always nest in order: h2 follows h1, h3 follows h2.</span></li>
+        <li><i data-icon="check"></i><span>Never skip levels to get a visual effect — use CSS instead.</span></li>
+        <li><i data-icon="x"></i><span>Don't use headings just to make text big. Use a <code>span</code> and CSS.</span></li>
+      </ul>
+      <div class="callout is-good">
+        <i data-icon="accessibility"></i>
+        <div><p class="small">Screen reader users use the H key to jump between headings on a page. A broken outline means they cannot navigate. This affects about 2–3% of users.</p></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Show the contrast between good and broken outlines. "The broken outline is not wrong to the eye — the page looks the same. But the screen reader cannot navigate it." Open a real site in an accessibility tool to show the heading outline if time allows.</p></aside>
+</section>
+
+<!-- ============================== 15 LISTS ============================== -->
+<section class="slide bench" data-phase="elements" data-title="Lists: ul, ol, dl">
+  <p class="eyebrow"><b>E/04</b> List elements</p>
+  <h2 class="h2 mt-s">Three kinds of list</h2>
+  <div class="grid cols-3 mt-l" style="--gap:24px">
+    <div class="card" data-step="1">
+      <p class="card__k">Unordered</p>
+      <h3 class="h3"><code>&lt;ul&gt;</code></h3>
+      <p class="small muted">Items have no fixed order. Renders as bullet points by default. Use for navigation menus, ingredient lists, tag lists.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:14px">
+<ul>
+  <li>Coq au vin</li>
+  <li>Ratatouille</li>
+  <li>Tarte Tatin</li>
+</ul>
+      </script>
+    </div>
+    <div class="card" data-step="2">
+      <p class="card__k">Ordered</p>
+      <h3 class="h3"><code>&lt;ol&gt;</code></h3>
+      <p class="small muted">Items have a meaningful sequence. Renders as numbered list. Use for steps, rankings, cooking instructions.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:14px">
+<ol>
+  <li>Sauté the onions.</li>
+  <li>Add the wine.</li>
+  <li>Braise for 90 min.</li>
+</ol>
+      </script>
+    </div>
+    <div class="card" data-step="3">
+      <p class="card__k">Description list</p>
+      <h3 class="h3"><code>&lt;dl&gt;</code></h3>
+      <p class="small muted">Term-description pairs. Use for menus with descriptions, glossaries, metadata key-value pairs.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:14px">
+<dl>
+  <dt>Coq au vin</dt>
+  <dd>Braised chicken, mushrooms. €18</dd>
+  <dt>Ratatouille</dt>
+  <dd>Seasonal veg. €14</dd>
+</dl>
+      </script>
+    </div>
+  </div>
+  <div class="callout mt-l">
+    <i data-icon="alert-circle"></i>
+    <div><p class="small">Never put anything except <code>&lt;li&gt;</code> as a direct child of <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code>. The HTML spec requires it, and browsers may fix it in ways you did not expect.</p></div>
+  </div>
+  <aside class="notes"><p>Ask: "on our restaurant menu page — which list type for the menu items? Which for the preparation steps?" A menu is usually ul (order doesn't matter for items). Steps are always ol. A menu with prices is a perfect dl.</p></aside>
+</section>
+
+<!-- ============================== 16 LINKS ============================== -->
+<section class="slide bench" data-phase="elements" data-title="Links: the a element">
+  <p class="eyebrow"><b>E/05</b> The anchor element</p>
+  <h2 class="h2 mt-s">Links connect pages — and ideas</h2>
+  <div class="split-4-8 mt-l items-start" style="gap:64px">
+    <script type="text/plain" data-lang="html" data-file="menu.html" class="is-sm">
+<!-- same site, different page -->
+<a href="menu.html">See menu</a>
+
+<!-- subfolder -->
+<a href="pages/about.html">About us</a>
+
+<!-- external link, opens in new tab -->
+<a href="https://google.com"
+   target="_blank"
+   rel="noopener noreferrer">Search</a>
+
+<!-- in-page anchor -->
+<a href="#reserve">Reserve a table</a>
+
+<!-- phone / email -->
+<a href="tel:+99532200001">Call us</a>
+<a href="mailto:hello@bistro.ge">Email</a>
+    </script>
+    <div class="stack" style="--gap:20px; padding-top:4px">
+      <div class="link-parts">
+        <div class="link-part">
+          <span class="attr-name-l">href</span>
+          <span class="attr-val-l">"menu.html"</span>
+          <h3>Where to go</h3>
+          <p class="small muted">Relative = same site. Absolute (https://…) = external site. <code>#id</code> = same-page scroll.</p>
+        </div>
+        <div class="link-part">
+          <span class="attr-name-l">target</span>
+          <span class="attr-val-l">"_blank"</span>
+          <h3>Open in new tab</h3>
+          <p class="small muted">Only use for external links. Never for same-site navigation — users find new tabs disorienting.</p>
+        </div>
+        <div class="link-part">
+          <span class="attr-name-l">rel</span>
+          <span class="attr-val-l">"noopener"</span>
+          <h3>Security</h3>
+          <p class="small muted">Required with <code>target="_blank"</code>. Prevents the new page from accessing your page via <code>window.opener</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Type these live. Show what happens if you omit the href — the link still renders but goes nowhere and loses its tab-stop. Mention: relative vs absolute paths. "When do you use absolute?" (Always for external sites. Only for same-site when you have a known base URL.)</p></aside>
+</section>
+
+<!-- ============================== 17 IMAGES ============================== -->
+<section class="slide bench" data-phase="elements" data-title="Images: the img element">
+  <p class="eyebrow"><b>E/06</b> Embedding images</p>
+  <h2 class="h2 mt-s">Images: <code>src</code>, <code>alt</code>, and nothing else</h2>
+  <div class="split-4-8 mt-l items-start" style="gap:64px">
+    <script type="text/plain" data-lang="html" data-file="menu.html">
+<!-- content image: always write alt text -->
+<img
+  src="img/coq-au-vin.jpg"
+  alt="Coq au vin in a cast-iron pot"
+  width="400"
+  height="300"
+  loading="lazy"
+>
+
+<!-- decorative image: empty alt="" -->
+<img src="img/divider.png" alt="">
+    </script>
+    <div class="stack" style="--gap:22px; padding-top:4px">
+      <div class="callout is-bad">
+        <i data-icon="image-off"></i>
+        <div>
+          <p class="h4">Missing <code>alt</code> — never acceptable</p>
+          <p class="small muted mt-s">Screen readers say "image" with no description. Search engines cannot index the image. If the image fails to load, the user sees nothing. Always write meaningful alt text.</p>
+        </div>
+      </div>
+      <table class="table">
+        <tr><th>Attribute</th><th>Purpose</th><th>Required?</th></tr>
+        <tr><td><code>src</code></td><td>Image URL or path</td><td>Yes</td></tr>
+        <tr><td><code>alt</code></td><td>Text description</td><td>Yes (empty ok for decorative)</td></tr>
+        <tr><td><code>width</code>/<code>height</code></td><td>Reserve layout space</td><td>Strongly recommended</td></tr>
+        <tr><td><code>loading="lazy"</code></td><td>Defer off-screen images</td><td>Recommended</td></tr>
+      </table>
+    </div>
+  </div>
+  <aside class="notes"><p>Show an img without alt — the browser console logs a warning. "Decorative images still need alt=''. The empty string tells screen readers to skip this image." The width/height attributes prevent layout shifts as the page loads (CLS metric).</p></aside>
+</section>
+
+<!-- ============================== 18 ATTRIBUTES ============================== -->
+<section class="slide bench" data-phase="elements" data-title="How attributes work">
+  <p class="eyebrow"><b>E/07</b> Attribute syntax</p>
+  <h2 class="h2 mt-s">Every attribute is a name–value pair</h2>
+  <p class="lead mt-m">Attributes go inside the opening tag and modify the element's behaviour or provide extra information.</p>
+  <div class="attr-anat" aria-hidden="true">
+    <div class="attr-part">
+      <div>&nbsp;</div>
+      <div class="attr-tick"></div>
+      <div class="attr-lbl">tag</div>
+    </div>
+    <span class="a-bracket">&lt;</span>
+    <div class="attr-part">
+      <div class="a-name">a</div>
+      <div class="attr-tick"></div>
+      <div class="attr-lbl">element name</div>
+    </div>
+    <span>&nbsp;</span>
+    <div class="attr-part">
+      <div class="a-attr">href</div>
+      <div class="attr-tick"></div>
+      <div class="attr-lbl">attribute name</div>
+    </div>
+    <div class="attr-part">
+      <div class="a-eq">=</div>
+      <div class="attr-tick" style="background:transparent"></div>
+      <div class="attr-lbl">&nbsp;</div>
+    </div>
+    <div class="attr-part">
+      <div class="a-val">"menu.html"</div>
+      <div class="attr-tick"></div>
+      <div class="attr-lbl">attribute value</div>
+    </div>
+    <span class="a-bracket">&gt;</span>
+    <div class="attr-part">
+      <div class="a-content">See menu</div>
+      <div class="attr-tick"></div>
+      <div class="attr-lbl">content</div>
+    </div>
+    <span class="a-bracket">&lt;/</span>
+    <span class="a-name">a</span>
+    <span class="a-bracket">&gt;</span>
+  </div>
+  <div class="grid cols-3 mt-xl" style="--gap:22px">
+    <div class="card" data-step="1">
+      <p class="card__k">Boolean attributes</p>
+      <h3 class="h4">No value needed</h3>
+      <p class="small muted">Some attributes are true just by being present: <code>disabled</code>, <code>checked</code>, <code>required</code>, <code>hidden</code>. No ="true" needed.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:12px">
+<button disabled>Closed</button>
+<input type="checkbox" checked>
+      </script>
+    </div>
+    <div class="card" data-step="2">
+      <p class="card__k">Custom data attributes</p>
+      <h3 class="h4"><code>data-*</code></h3>
+      <p class="small muted">Store extra data on elements for JavaScript to read. Prefix is always <code>data-</code> followed by a name you choose.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:12px">
+<li data-price="18" data-id="coq">
+  Coq au vin
+</li>
+      </script>
+    </div>
+    <div class="card" data-step="3">
+      <p class="card__k">Global attributes</p>
+      <h3 class="h4">On every element</h3>
+      <p class="small muted"><code>id</code>, <code>class</code>, <code>hidden</code>, <code>tabindex</code>, and <code>title</code> work on any HTML element. <code>id</code> must be unique per page.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:12px">
+<div id="reserve" class="section">
+  <h2>Reserve</h2>
+</div>
+      </script>
+    </div>
+  </div>
+  <aside class="notes"><p>Type the attribute anatomy live. Ask the class: "what is the attribute name, what is the value?" Then show a boolean attribute: add <code>disabled</code> to a button — no ="true" needed. This surprises many students.</p></aside>
+</section>
+
+<!-- ============================== 19 BUTTON VS LINK ============================== -->
+<section class="slide bench" data-phase="buttons" data-title="Button or link?">
+  <p class="eyebrow"><b>B/01</b> The most common mistake</p>
+  <h2 class="h1 mt-s">Button vs. link — not the same thing</h2>
+  <div class="bvl">
+    <div class="bvl-card is-btn">
+      <span class="bvl-tag">&lt;button&gt;</span>
+      <h3>Triggers an action</h3>
+      <span class="bvl-use">When to use</span>
+      <ul>
+        <li>Submit a form</li>
+        <li>Open/close a modal</li>
+        <li>Add item to cart</li>
+        <li>Toggle something on or off</li>
+        <li>Any JavaScript action on <em>this</em> page</li>
+      </ul>
+      <script type="text/plain" data-lang="html" class="is-xs">
+<button type="button">
+  Add to cart
+</button>
+
+<button type="submit">
+  Reserve a table
+</button>
+      </script>
+    </div>
+    <div class="bvl-card is-link">
+      <span class="bvl-tag">&lt;a&gt;</span>
+      <h3>Navigates somewhere</h3>
+      <span class="bvl-use">When to use</span>
+      <ul>
+        <li>Go to another page</li>
+        <li>Jump to a section on this page</li>
+        <li>Open an external website</li>
+        <li>Download a file (<code>download</code> attr)</li>
+        <li>Anything that changes the URL</li>
+      </ul>
+      <script type="text/plain" data-lang="html" class="is-xs">
+<a href="menu.html">
+  See full menu
+</a>
+
+<a href="#reserve">
+  Reserve a table
+</a>
+      </script>
+    </div>
+  </div>
+  <div class="bvl-rule">
+    <i data-icon="compass"></i>
+    <p>If clicking it would change the URL — use <code>&lt;a&gt;</code>. If it does something on the current page — use <code>&lt;button&gt;</code>.</p>
+  </div>
+  <aside class="notes"><p>This is the most common mistake developers make. Ask the class: "you've seen buttons styled as links and links styled as buttons — why does it matter?" Answers: screen readers announce "link" vs "button", keyboard users expect different behavior, mobile browsers handle them differently.</p></aside>
+</section>
+
+<!-- ============================== 20 BUTTON TYPE ============================== -->
+<section class="slide bench" data-phase="buttons" data-title="The button type attribute">
+  <p class="eyebrow"><b>B/02</b> Always set the type</p>
+  <h2 class="h2 mt-s">Three button types — default is dangerous</h2>
+  <div class="grid cols-3 mt-l" style="--gap:24px">
+    <div class="card" data-step="1">
+      <p class="card__k"><code>type="button"</code></p>
+      <h3 class="h3">Does nothing by default</h3>
+      <p class="small muted">Triggers only JavaScript you attach. Use for all non-form buttons: modals, toggles, actions.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:14px">
+<button type="button"
+  id="add-to-cart">
+  Add to cart
+</button>
+      </script>
+    </div>
+    <div class="card" data-step="2">
+      <p class="card__k"><code>type="submit"</code></p>
+      <h3 class="h3">Submits the form</h3>
+      <p class="small muted">Submits the nearest ancestor <code>&lt;form&gt;</code>. This is the default when no type is set — which is the dangerous part.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:14px">
+<form action="/reserve">
+  <!-- ... fields ... -->
+  <button type="submit">
+    Reserve
+  </button>
+</form>
+      </script>
+    </div>
+    <div class="card" data-step="3">
+      <p class="card__k"><code>type="reset"</code></p>
+      <h3 class="h3">Clears the form</h3>
+      <p class="small muted">Resets all form fields to their default values. Rarely used — most users find accidental resets very frustrating. Use with caution.</p>
+      <script type="text/plain" data-lang="html" class="is-xs" style="margin-top:14px">
+<button type="reset">
+  Clear form
+</button>
+      </script>
+    </div>
+  </div>
+  <div class="callout is-warn mt-l">
+    <i data-icon="triangle-alert"></i>
+    <div>
+      <p class="h4">Always set <code>type</code> explicitly</p>
+      <p class="small muted mt-s">A <code>&lt;button&gt;</code> inside a <code>&lt;form&gt;</code> without a type defaults to <code>submit</code>. If you meant it to be a toggle or modal trigger, it will accidentally submit the form. This is a very common bug.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Show the bug live: add a button with no type inside a form, click it — the form submits. Now add type="button" — it no longer submits. Students often encounter this exact bug before they know why it happens.</p></aside>
+</section>
+
+<!-- ============================== 21 BUTTON VS LINK QUIZ ============================== -->
+<section class="slide bench" data-phase="buttons" data-title="Quiz: button or link?">
+  <p class="eyebrow"><b>B/03</b> Quick check</p>
+  <h2 class="h2 mt-s">Button or link for each of these?</h2>
+  <div class="grid cols-2 mt-l" style="--gap:22px">
+    <div class="card" data-step="1">
+      <p class="card__k">Scenario A</p>
+      <h3 class="h4">"Add to cart" on a menu item</h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Button.</b> It does something on the current page — updates state. The URL does not change. Use <code>&lt;button type="button"&gt;</code>.</p>
+      </div>
+    </div>
+    <div class="card" data-step="2">
+      <p class="card__k">Scenario B</p>
+      <h3 class="h4">"View full menu" on the homepage</h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Link.</b> It navigates to a different page. Use <code>&lt;a href="menu.html"&gt;</code>.</p>
+      </div>
+    </div>
+    <div class="card" data-step="3">
+      <p class="card__k">Scenario C</p>
+      <h3 class="h4">"Close" on a modal overlay</h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Button.</b> It dismisses the modal — an action on the current page, no navigation. Use <code>&lt;button type="button"&gt;</code>.</p>
+      </div>
+    </div>
+    <div class="card" data-step="4">
+      <p class="card__k">Scenario D</p>
+      <h3 class="h4">"Download our PDF menu"</h3>
+      <div class="reveal-box" data-reveal><button class="reveal-box__cover">Answer</button>
+        <p class="small muted"><b>Link.</b> It navigates to a file. Use <code>&lt;a href="menu.pdf" download&gt;</code>. The <code>download</code> attribute triggers a download instead of opening the file.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Cover each scenario before revealing. Scenario B is the one students most often get wrong — they think a visually styled button means a button element. Emphasize: appearance ≠ semantics.</p></aside>
+</section>
+
+<!-- ============================== 22 CLASSWORK 2 ============================== -->
+<section class="slide bench" data-phase="buttons" data-title="Classwork 2 · Restaurant menu page">
+  <p class="eyebrow"><b>CW/02</b> 15 minutes</p>
+  <h2 class="h1 mt-s">Build the restaurant menu page</h2>
+  <p class="lead mt-m">From the skeleton you built in CW 1, add all of today's elements — headings, lists, links, an image, and buttons.</p>
+  <div class="tiers">
+    <div class="tier base">
+      <div class="tier__k"><span>Base</span><span>required</span></div>
+      <h3>The menu</h3>
+      <ul>
+        <li>Restaurant name in <code>&lt;h1&gt;</code></li>
+        <li>Two menu sections as <code>&lt;h2&gt;</code></li>
+        <li>Each section has a <code>&lt;ul&gt;</code> of dishes</li>
+        <li>A "Reserve a table" link that links to <code>#reserve</code></li>
+        <li>An "Add to order" button on at least one dish</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier__k"><span>Plus</span><span>go further</span></div>
+      <h3>Richer content</h3>
+      <ul>
+        <li>Use <code>&lt;dl&gt;</code> for dish name + description</li>
+        <li>Add an image with correct <code>alt</code> text</li>
+        <li>Add an external link (<code>target="_blank"</code> + <code>rel</code>)</li>
+        <li>A working <code>id="reserve"</code> section</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier__k"><span>Pro</span><span>challenge</span></div>
+      <h3>Validate and inspect</h3>
+      <ul>
+        <li>Paste the HTML into the W3C validator — fix every error</li>
+        <li>Open DevTools and navigate the Elements tree</li>
+        <li>Check the heading outline using a browser extension</li>
+        <li>Try Tab-navigating your page: can you reach every link and button?</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes"><p>15 minutes. Circulate and look for: wrong button types (no type attribute), links with no href, images missing alt. Have one or two students share their screen when time is up.</p></aside>
+</section>
+
+<!-- ============================== 23 SUMMARY ============================== -->
+<section class="slide bench" data-phase="summary" data-title="Summary">
+  <p class="eyebrow"><b>Sum/01</b> You explain it</p>
+  <h2 class="h1 mt-s">Cover the card. What's on the other side?</h2>
+  <p class="lead mt-m">Click the card to check. If you are wrong, re-read the slide before the next lecture.</p>
+  <div class="flips">
+    <div class="flip" data-flip>
+      <div class="flip__face flip__front card">
+        <p class="card__k">01</p>
+        <h3 class="h3">What does <code>&lt;!DOCTYPE html&gt;</code> do?</h3>
+        <div class="q"><i data-icon="help-circle"></i>Reveal</div>
+      </div>
+      <div class="flip__face flip__back card">
+        <p>Tells the browser to use modern HTML5 rendering mode, not quirks mode. Always goes on line 1, before anything else.</p>
+      </div>
+    </div>
+    <div class="flip" data-flip>
+      <div class="flip__face flip__front card">
+        <p class="card__k">02</p>
+        <h3 class="h3">What is the difference between <code>&lt;head&gt;</code> and <code>&lt;body&gt;</code>?</h3>
+        <div class="q"><i data-icon="help-circle"></i>Reveal</div>
+      </div>
+      <div class="flip__face flip__back card">
+        <p><code>&lt;head&gt;</code> holds metadata the browser uses but the user does not see. <code>&lt;body&gt;</code> holds all visible content.</p>
+      </div>
+    </div>
+    <div class="flip" data-flip>
+      <div class="flip__face flip__front card">
+        <p class="card__k">03</p>
+        <h3 class="h3">Why does the viewport meta tag exist?</h3>
+        <div class="q"><i data-icon="help-circle"></i>Reveal</div>
+      </div>
+      <div class="flip__face flip__back card">
+        <p>Without it, mobile browsers zoom out to a desktop width. It tells them to render at the device's physical width so CSS can adapt the layout.</p>
+      </div>
+    </div>
+    <div class="flip" data-flip>
+      <div class="flip__face flip__front card">
+        <p class="card__k">04</p>
+        <h3 class="h3">Why must every <code>&lt;img&gt;</code> have an <code>alt</code> attribute?</h3>
+        <div class="q"><i data-icon="help-circle"></i>Reveal</div>
+      </div>
+      <div class="flip__face flip__back card">
+        <p>Screen readers read alt text aloud. Search engines use it. If the image fails to load, alt text shows. Decorative images use <code>alt=""</code> to tell screen readers to skip them.</p>
+      </div>
+    </div>
+    <div class="flip" data-flip>
+      <div class="flip__face flip__front card">
+        <p class="card__k">05</p>
+        <h3 class="h3">When do you use <code>&lt;a&gt;</code> vs. <code>&lt;button&gt;</code>?</h3>
+        <div class="q"><i data-icon="help-circle"></i>Reveal</div>
+      </div>
+      <div class="flip__face flip__back card">
+        <p>Use <code>&lt;a&gt;</code> to navigate (change URL). Use <code>&lt;button&gt;</code> to trigger an action on the current page. Never style a link to look like a button and call it a button.</p>
+      </div>
+    </div>
+    <div class="flip" data-flip>
+      <div class="flip__face flip__front card">
+        <p class="card__k">06</p>
+        <h3 class="h3">What happens if you skip heading levels?</h3>
+        <div class="q"><i data-icon="help-circle"></i>Reveal</div>
+      </div>
+      <div class="flip__face flip__back card">
+        <p>Screen readers announce the heading level. Jumping from h1 to h3 breaks the outline and confuses users who navigate by headings. Use levels in order; use CSS for visual size.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>6 minutes. Students explain each card to a neighbour first, then you reveal. If someone is unsure, pause and answer before moving on.</p></aside>
+</section>
+
+<!-- ============================== 24 HOMEWORK ============================== -->
+<section class="slide bench" data-phase="summary" data-title="Homework">
+  <p class="eyebrow"><b>HW/04</b> Due next lecture</p>
+  <h2 class="h1 mt-s">Homework</h2>
+  <div class="hw">
+    <div class="tier base">
+      <div class="tier__k"><span>Base</span><span>required</span></div>
+      <h3>Finish the menu page</h3>
+      <ul>
+        <li>All sections from CW 2 complete</li>
+        <li>Valid HTML — no W3C errors</li>
+        <li>Every image has <code>alt</code> text</li>
+        <li>Correct button types throughout</li>
+        <li>Heading levels never skip</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier__k"><span>Plus</span><span>go further</span></div>
+      <h3>A second page</h3>
+      <ul>
+        <li>Create an <code>about.html</code> page</li>
+        <li>Link the two pages to each other</li>
+        <li>Both pages share the same <code>head</code> structure</li>
+        <li>Use a <code>&lt;dl&gt;</code> for team members or hours</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier__k"><span>Pro</span><span>challenge</span></div>
+      <h3>Inspect the web</h3>
+      <ul>
+        <li>Pick any restaurant site online</li>
+        <li>Open DevTools and find three elements that are semantically wrong (e.g., link styled as button)</li>
+        <li>Write a 5-sentence report: what is wrong, why it matters, how to fix it</li>
+      </ul>
+    </div>
+  </div>
+  <div class="submit mt-l">
+    <i data-icon="folder-up"></i>
+    <span>Submit your <code>index.html</code> (and any other files) as a zip or GitHub link via the course platform.</span>
+  </div>
+  <aside class="notes"><p>2 minutes. Read the three tiers. The Pro task helps students start thinking like code reviewers — a skill they will need every day.</p></aside>
+</section>
+
+<!-- ============================== 25 THANKS ============================== -->
+<section class="slide s-thanks v-center" data-phase="outro" data-tone="dark" data-title="Thank you">
+  <p class="eyebrow"><b>H/04</b> End of lecture</p>
+  <h2 class="display mt-m">Thank you.</h2>
+  <p class="lead mt-l" style="max-width:1100px">Next lecture: <b style="color:#fff">Semantic HTML and the first CSS rules.</b> We learn why <code>&lt;div&gt;</code> is almost never the right element, and we give the page its first visual style.</p>
+  <aside class="notes"><p>Leave time for questions. Remind students to submit homework before the next session.</p></aside>
+</section>
+
+</div>
+</div>
+
+<script>window.Prism = window.Prism || {}; window.Prism.manual = true;</script>
+<script src="_shared/vendor/icons.js"></script>
+<script src="_shared/vendor/prism/prism.min.js" data-manual></script>
+<script src="_shared/vendor/prism/prism-bash.min.js"></script>
+<script src="_shared/music/tracks.js"></script>
+<script src="_shared/terms.js"></script>
+<script src="_shared/deck.js"></script>
+<script>
+(function () {
+  Deck.init({
+    shared: '_shared/',
+    code: 'H/04',
+    lecture: 4,
+    title: 'The Document',
+    footer: 'HTML & CSS / Lecture 04 / Document structure and content elements',
+    breakMinutes: 10,
+    phases: [
+      { id: 'qa',       label: 'Q&A' },
+      { id: 'problem',  label: 'Problem' },
+      { id: 'structure',label: 'Structure' },
+      { id: 'elements', label: 'Elements' },
+      { id: 'buttons',  label: 'Btn vs Link' },
+      { id: 'summary',  label: 'Summary' }
+    ]
+  });
+})();
+</script>
+</body>
+</html>
